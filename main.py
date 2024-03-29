@@ -1,9 +1,9 @@
 import re
 import math
-import pandas as pd
-import matplotlib.pyplot as plt
 from tkinter import *
 from tkinter import ttk
+
+
 def read_text_file(file_path="data.txt"):
     try:
         with open(file_path, 'r') as file:
@@ -18,12 +18,7 @@ def count_occurrences(reg1, reg2, txt):
     matches = re.findall(reg1, txt)  # Находим все вхождения по регулярному выражению
     matches.extend(re.findall(reg2, txt))
     occurrence_count = {}  # Словарь для подсчета количества вхождений
-
     matches = [i.strip() for i in matches]
-
-    # print(matches)
-    # print(occurrence_count)
-
     for match in matches:
         if match in occurrence_count:
             occurrence_count[match] += 1
@@ -45,12 +40,8 @@ text = read_text_file()
 result1 = count_occurrences(regex1, regex2, text)
 result2 = count_occurrences(regex3, regex4, text)
 
-print(result1, end="\n\n")
-
-# pd.set_option('display.max_rows', None)
-# print(pd.DataFrame(list(result1.items()), columns=["Операнд", "Количество вхождений"]))
-
-print(result2, end="\n\n")
+# print(result1, end="\n\n")
+# print(result2, end="\n\n")
 
 n = len(result1) + len(result2)
 print(f"Словарь программы. n = {n}")
@@ -63,7 +54,7 @@ print(f"Объем программы. V = {int(V)}")
 
 root1 = Tk()
 root1.title("")
-root1.geometry("1050x1000")
+root1.geometry("1050x800")
 root1.rowconfigure(index=0, weight=1)
 root1.columnconfigure(index=0, weight=1)
 
@@ -94,7 +85,7 @@ tree2.heading("number", text="Количество вхождений")
 tree2.column("#1", stretch=NO, width=300)
 tree2.column("#2", stretch=NO, width=200)
 
-for item in result1.items():
+for item in result2.items():
     tree2.insert("", END, values=item)
 
 scrollbar2 = ttk.Scrollbar(orient=VERTICAL, command=tree2.yview)

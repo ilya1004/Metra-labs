@@ -48,9 +48,11 @@ def calculate_metrics():
     N = sum(result1.values()) + sum(result2.values())
     output_text += f"Длина программы. N = {N}\n"
     V = N * math.log(n, 2)
-    output_text += f"Объем программы. V = {int(V)}\n"
+    output_text += f"Объем программы. V = {int(V)}"
+    output.config(state='normal')
     output.delete("1.0", END)
     output.insert(END, output_text)
+    output.config(state='disabled')
     update_treeview()
 
 
@@ -102,13 +104,10 @@ output_frame.pack(fill=BOTH, expand=True)
 output_label = Label(output_frame, text="Результат:")
 output_label.pack()
 
-output_scrollbar = Scrollbar(output_frame)
-output_scrollbar.pack(side=RIGHT, fill=Y)
-
-output = Text(output_frame, height=3, yscrollcommand=output_scrollbar.set)
+output = Text(output_frame, height=1)
 output.pack(fill=BOTH, expand=True)
+output.config(state='disabled')
 
-scrollbar.config(command=output.yview)
 
 tree_frame = Frame(root1)
 tree_frame.pack(fill=BOTH, expand=True)

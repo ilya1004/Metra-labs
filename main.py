@@ -53,15 +53,15 @@ print(f"Объем программы. V = {int(V)}")
 
 root1 = Tk()
 root1.title("")
-root1.geometry("1050x800")
+root1.geometry("1050x750")
 root1.rowconfigure(index=0, weight=1)
 root1.columnconfigure(index=0, weight=1)
 
-tree1 = ttk.Treeview(columns=["operator", "number"], show="headings")
+tree1 = ttk.Treeview(columns=["operands", "number"], show="headings")
 tree1.grid(row=0, column=0, sticky="nsew")
 
 
-tree1.heading("operator", text="Оператор")
+tree1.heading("operands", text="Операнд")
 tree1.heading("number", text="Количество вхождений")
 
 tree1.column("#1", stretch=NO, width=300)
@@ -75,10 +75,10 @@ tree1.configure(yscrollcommand=scrollbar1.set)
 scrollbar1.grid(row=0, column=1, sticky="ns")
 
 
-tree2 = ttk.Treeview(columns=["operands", "number"], show="headings")
+tree2 = ttk.Treeview(columns=["operators", "number"], show="headings")
 tree2.grid(row=0, column=2, sticky="nsew")
 
-tree2.heading("operands", text="Операнд")
+tree2.heading("operators", text="Оператор")
 tree2.heading("number", text="Количество вхождений")
 
 tree2.column("#1", stretch=NO, width=300)

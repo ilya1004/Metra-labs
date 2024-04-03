@@ -2,7 +2,7 @@ private const val CONFERENCE_DAY1_START = "2019-05-07T07:00:00-07:00"
 	private const val CONFERENCE_DAY1_END = "2019-05-07T22:00:01-07:00"
 	val TestConferenceDays = listOf(
     	ConferenceDay(
-        	ZonedDateTime.parse(CONFERENCE_DAY1_START),
+        	ZonedDateTime.parse(CONFERENCE_DAY1_START)),
     	ConferenceDay(
         	ZonedDateTime.parse(CONFERENCE_DAY2_START),
         	ZonedDateTime.parse(CONFERENCE_DAY2_END)),
@@ -14,7 +14,7 @@ private const val CONFERENCE_DAY1_START = "2019-05-07T07:00:00-07:00"
     	androidTag, cloudTag, webTag, sessionsTag, codelabsTag, beginnerTag,
     	intermediateTag, advancedTag, themeTag)
 	val speaker1 = Speaker(
-    	id = "1",)
+    	id = "1")
 	val speaker3 = Speaker(
     	id = "3",
     	name = "Hans Moleman",

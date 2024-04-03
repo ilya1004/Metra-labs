@@ -4,7 +4,7 @@ from tkinter import *
 from tkinter import ttk
 
 
-def read_text_file(file_path="data.txt"):
+def read_text_file(file_path="data.kt"):
     try:
         with open(file_path, 'r') as file:
             txt = file.read()
@@ -32,16 +32,15 @@ regex1 = r"(?<=val|var)+\s+[a-zA-Z]+\s*(?=[\:=]*)"   # переменные
 regex2 = r"(?<=\()+\s*[a-zA-Z1-9\"._]+\s*(?=\)*)"  # параметры функций
 
 regex3 = r"\s*(\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\+\+|--|\.\.|\.|\(\)|\)|\(|if|for|when|while|do|\[.+\])(?=\s*)"  # операторы
-regex4 = r"\s*[a-zA-ZА-я\w\d<>?\t\n\r]+\([\.\s\d\w\s,\"\'=.:!\[\]\n\r\t]*\)(?=\s*)"  # функции
+regex4 = r"\s*[a-zA-ZА-я\w\d<>?\t\n\r]+\([\.\s\d\w\s,\"\'=.:!?\[\]\n\r\t]*\)(?=\s*)"  # функции
 
 text = read_text_file()
-# print(text, end="\n\n")
 
 result1 = count_occurrences(regex1, regex2, text)
 result2 = count_occurrences(regex3, regex4, text)
 
-# print(result1, end="\n\n")
-# print(result2, end="\n\n")
+result1["Итого"] = sum(result1.values())
+result2["Итого"] = sum(result2.values())
 
 n = len(result1) + len(result2)
 print(f"Словарь программы. n = {n}")

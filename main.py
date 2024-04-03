@@ -41,14 +41,14 @@ def calculate_metrics():
     text_content = text.get("1.0", END)
     result1 = count_occurrences(regex1, regex2, text_content)
     result2 = count_occurrences(regex3, regex4, text_content)
-    result1["Итого"] = sum(result1.values())
-    result2["Итого"] = sum(result2.values())
     n = len(result1) + len(result2)
     output_text = f"Словарь программы. n = {n}\n"
     N = sum(result1.values()) + sum(result2.values())
     output_text += f"Длина программы. N = {N}\n"
     V = N * math.log(n, 2)
     output_text += f"Объем программы. V = {int(V)}"
+    result1["Итого"] = sum(result1.values())
+    result2["Итого"] = sum(result2.values())
     output.config(state='normal')
     output.delete("1.0", END)
     output.insert(END, output_text)

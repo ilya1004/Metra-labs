@@ -1,48 +1,83 @@
-private const val CONFERENCE_DAY1_START = "2019-05-07T07:00:00-07:00"
-private const val CONFERENCE_DAY1_END = "2019-05-07T22:00:01-07:00"
-val TestConferenceDays = listOf(
-	ConferenceDay(
-		ZonedDateTime.parse(CONFERENCE_DAY1_START)),
-	ConferenceDay(
-		ZonedDateTime.parse(CONFERENCE_DAY2_START),
-		ZonedDateTime.parse(CONFERENCE_DAY2_END)),
-	ConferenceDay(
-		ZonedDateTime.parse(CONFERENCE_DAY3_START),
-		ZonedDateTime.parse(CONFERENCE_DAY3_END)))
-val androidTag = Tag("1", Tag.CATEGORY_TOPIC, "track_android", 0, "Android", 0xFFAED581.toInt())
-val tagsList = listOf(
-	androidTag, cloudTag, webTag, sessionsTag, codelabsTag, beginnerTag,
-	intermediateTag, advancedTag, themeTag)
-val speaker1 = Speaker(
-	id = "1")
-val speaker3 = Speaker(
-	id = "3",
-	name = "Hans Moleman",
-	imageUrl = "",
-	company = "",
-	biography = "")
-val room = Room(id = "1", name = "Tent 1")
-val session0 = Session(
-	id = "0", title = "Session 0", description = "This session is awesome",
-	startTime = TestConferenceDays[0].start, endTime = TestConferenceDays[0].end,
-	isLivestream = false,
-	room = room, sessionUrl = "", youTubeUrl = "", photoUrl = "", doryLink = "",
-	tags = listOf(androidTag, webTag, sessionsTag),
-	displayTags = listOf(androidTag, webTag),
-	speakers = setOf(speaker1), relatedSessions = emptySet())
-val sessionsList = listOf(session0, session1, session2, session3, sessionWithYoutubeUrl)
-val sessionIDs = sessionsList.map { it.id }.toList()
-val block1 = Block(
-	title = "Keynote",
-	type = "keynote",
-	color = 0xffff00ff.toInt(),
-	startTime = TestConferenceDays[0].start,
-	endTime = TestConferenceDays[0].start.plusHours(1L))
-val block2 = Block(
-	title = "Breakfast",
-	type = "meal",
-	color = 0xffff00ff.toInt(),
-	startTime = TestConferenceDays[0].start.plusHours(1L),
-	endTime = TestConferenceDays[0].start.plusHours(2L))
-val agenda = listOf(block1, block2)
-private val userEvent0 = UserEvent()
+private class Node(private val maxChildren: Short) {
+    var child1: Node? = null
+    var child2: Node? = null
+ 
+    fun canAddChildren(): Boolean {
+        var numChildren = 0
+        if (child1 != null) numChildren++
+        if (child2 != null) numChildren++
+        return numChildren < maxChildren
+    }
+ 
+    fun children() = listOfNotNull(child1, child2)
+ 
+    fun addChild(child: Node) {
+        if (child1 == null) {
+            child1 = child
+        } else if (child2 == null) {
+            child2 = child
+        } else {
+            throw Exception()
+        }
+    }
+}
+ 
+fun main() {
+    val t = readln().toInt()
+ 
+    repeat(t) {
+        val input = readln().split(" ").map { it.toInt() }
+        val a = input[0]
+        val b = input[1]
+        val c = input[2]
+ 
+        println(minTreeHeight(a, b, c))
+    }
+}
+ 
+private fun minTreeHeight(a: Int, b: Int, c: Int): Int {
+    if (a + 1 != c) {
+        return -1
+    }
+ 
+    val nodesToAdd = mutableListOf<Node>().apply {
+        addAll(List(a) { Node(maxChildren = 2) })
+        addAll(List(b) { Node(maxChildren = 1) })
+        addAll(List(c) { Node(maxChildren = 0) })
+    }
+ 
+    val root = try {
+        createTree(nodesToAdd)
+    } catch(e: Exception) {
+        return -1
+    }
+ 
+    return maxTreeHeight(root)
+}
+ 
+private fun createTree(nodesToAdd: List<Node>): Node {
+    val count = nodesToAdd.size
+    val root = nodesToAdd.first()
+    var added = 1
+    val queue = ArrayDeque<Node>()
+    queue.add(root)
+    while (queue.isNotEmpty() && added < count) {
+        val parent = queue.removeFirst()
+        while (parent.canAddChildren()) {
+            val newNode = nodesToAdd[added]
+            parent.addChild(newNode)
+            added++
+        }
+        queue.addAll(parent.children())
+    }
+ 
+    if (added != count) throw Exception()
+ 
+    return root
+}
+ 
+private fun maxTreeHeight(root: Node, countFrom: Int = 0): Int = if (root.children().isNotEmpty()) {
+    root.children().maxOf { maxTreeHeight(it, countFrom + 1) }
+} else {
+    countFrom
+}

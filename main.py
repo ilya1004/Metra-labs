@@ -51,11 +51,11 @@ def calculate_metrics():
     result1 = count_occurrences(regex1, regex2, text_content)
     result2 = count_occurrences(regex3, regex4, text_content)
     n = len(result1) + len(result2)
-    output_text = f"Словарь программы. n = {n}\n"
+    output_text = f"Словарь программы. n = {len(result1)} + {len(result2)} = {n}\n"
     N = sum(result1.values()) + sum(result2.values())
-    output_text += f"Длина программы. N = {N}\n"
+    output_text += f"Длина программы. N = {sum(result1.values())} + {sum(result2.values())} = {N}\n"
     V = N * math.log(n, 2)
-    output_text += f"Объем программы. V = {int(V)}"
+    output_text += f"Объем программы. V = {N}*log2({n}) = {int(V)}"
     result1["Итого"] = sum(result1.values())
     result2["Итого"] = sum(result2.values())
     output.config(state='normal')

@@ -16,7 +16,7 @@ def read_text_file(file_path="data.kt"):
 
 
 def open_file():
-    file_path = filedialog.askopenfilename(filetypes=[("Kotlin Files", ".kt"), ("Text Files", "*.txt"), ("All Files", "*.*")])
+    file_path = filedialog.askopenfilename(filetypes=[("Kotlin Files", (".kt", ".kts")), ("Text Files", "*.txt"), ("All Files", "*.*")])
     if file_path:
         text.delete("1.0", END)
         text.insert(END, read_text_file(file_path))
@@ -78,7 +78,7 @@ def update_treeview():
 regex1 = r"(?<=val|var)+\s+[\w]+\s*(?=[\:=]*)"   # переменные
 regex2 = r"(?<=\()+\s*[\w\".\s,]+\s*(?=\)*)"  # параметры функций
 
-regex3 = r"\s*(,|\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\+\+|--|\.\.|\.|\(.+\)|if|for|when|while|do|\[.+\])(?=\s*)"  # операторы
+regex3 = r"\s*(,|\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\+\+|--|\.\.|\.|\(.+\)|if|for|when|while|return|throw|!=|do|\[.+\])(?=\s*)"  # операторы
 regex4 = r"\s*[a-zA-ZА-я\w\d<>?\t\n\r]+\([\.\s\d\w\s,\"\'=.:!?\[\]\n\r\t\(]*\)(?=\s*)"  # функции
 
 root1 = Tk()

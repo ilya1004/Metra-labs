@@ -24,7 +24,16 @@ def open_file():
 
 def count_occurrences(reg1, reg2, txt):
     matches = re.findall(reg1, txt)  # Находим все вхождения по регулярному выражению
-    matches.extend(re.findall(reg2, txt))
+    lst1 = []
+    if reg2 == r"(?<=\()+\s*[\w\".\s,]+\s*(?=\)*)":
+        lst = re.findall(reg2, txt)
+        # print(lst)
+        for i in lst:
+            lst1.extend(i.split(','))
+        # print(lst1)
+        matches.extend(lst1)
+    else:
+        matches.extend(re.findall(reg2, txt))
     occurrence_count = {}  # Словарь для подсчета количества вхождений
     matches = [i.strip() for i in matches]
     for match in matches:
@@ -66,11 +75,11 @@ def update_treeview():
         tree2.insert("", END, values=item)
 
 
-regex1 = r"(?<=val|var)+\s+[a-zA-Z]+\s*(?=[\:=]*)"   # переменные
-regex2 = r"(?<=\()+\s*[a-zA-Z1-9\"._]+\s*(?=\)*)"  # параметры функций
+regex1 = r"(?<=val|var)+\s+[\w]+\s*(?=[\:=]*)"   # переменные
+regex2 = r"(?<=\()+\s*[\w\".\s,]+\s*(?=\)*)"  # параметры функций
 
-regex3 = r"\s*(\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\+\+|--|\.\.|\.|\(\)|\)|\(|if|for|when|while|do|\[.+\])(?=\s*)"  # операторы
-regex4 = r"\s*[a-zA-ZА-я\w\d<>?\t\n\r]+\([\.\s\d\w\s,\"\'=.:!?\[\]\n\r\t]*\)(?=\s*)"  # функции
+regex3 = r"\s*(,|\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\+\+|--|\.\.|\.|\(.+\)|if|for|when|while|do|\[.+\])(?=\s*)"  # операторы
+regex4 = r"\s*[a-zA-ZА-я\w\d<>?\t\n\r]+\([\.\s\d\w\s,\"\'=.:!?\[\]\n\r\t\(]*\)(?=\s*)"  # функции
 
 root1 = Tk()
 root1.title("")

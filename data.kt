@@ -1,4 +1,57 @@
 
+val z = 3
+val result = when (z) {
+    1 -> "One"
+    2 -> "Two"
+    3 -> "Three"
+    4 -> "Four"
+    5 -> "Five"
+    else -> "Other number"
+}
+println("Result: $result")
+
+fun bar() {
+    val sc = Scanner(System.`in`)
+    var t = sc.nextInt()
+    while (t-- > 0) {
+        var n = sc.nextInt()
+        n *= 2
+        val arr = Array(n) { CharArray(n) }
+        var ha = false
+        var dot = false
+        for (i in 1..n) {
+            if (i % 2 == 1) {
+                ha = !ha
+            }
+            var ch: Char = ' '
+            if (ha) {
+                ch = '#'
+            } else if (qwe) {
+                ch = '.'
+            }
+            var c: Char = ch
+            for (j in 1..n) {
+                c = c
+                if (j != 1 && j % 2 == 1) {
+                    if (c == '#') {
+                        c = '.'
+                    } else {
+                        c = '#'
+                    }
+                }
+                arr[i - 1][j - 1] = c
+            }
+        }
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                print(arr[i][j])
+            }
+            println()
+        }
+    }
+}
+
+
 if (x > y) {
     println("x is greater than y")
 } else {
@@ -166,45 +219,7 @@ fun describe(obj: Any): String =
         else       -> "Unknown"
     }
 
-fun bar() {
-    val sc = Scanner(System.`in`)
-    var t = sc.nextInt()
-    while (t-- > 0) {
-        var n = sc.nextInt()
-        n *= 2
-        val arr = Array(n) { CharArray(n) }
-        var ha = false
-        var dot = false
-        for (i in 1..n) {
-            if (i % 2 == 1) {
-                ha = !ha
-            }
-            var ch: Char = ' '
-            if (ha) {
-                ch = '#'
-            } else if (qwe) {
-                ch = '.'
-            }
-            var c: Char = ch
-            for (j in 1..n) {
-                c = c
-                if (j != 1 && j % 2 == 1) {
-                    if (c == '#')
-                        c = '.'
-                    else
-                        c = '#'
-                }
-                arr[i - 1][j - 1] = c
-            }
-        }
-        for (i in 0 until n) {
-            for (j in 0 until n) {
-                print(arr[i][j])
-            }
-            println()
-        }
-    }
-}
+
 
 fun main() {
     val x = 10

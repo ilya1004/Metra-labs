@@ -47,13 +47,17 @@ def max_nesting_level(code):
     current_depth = 0
     when_depth = -1
     in_when = False
-    else_count = 0
+    in_elif = False
     for line in code.split('\n'):
         stripped = line.strip()
         if (stripped.startswith('if') or stripped.find('else if') != -1 or
-                (stripped.find('else') != -1 and in_when is False) or stripped.startswith("do")):
-            if stripped.find('else if') != -1 or (stripped.find('else') != -1 and in_when is False):
-                else_count += 1
+                (stripped.find('else') != -1 and in_when is True) or stripped.startswith("do")):
+            if stripped.find('else if') != -1:
+                in_elif = True
+            if stripped.find('else') != -1 and in_when is True:
+                when_depth += 1
+                max_depth = max(max_depth, when_depth - 1)
+                continue
             current_depth += 1
             max_depth = max(max_depth, current_depth)
 
@@ -63,25 +67,23 @@ def max_nesting_level(code):
         elif stripped.find("->") != -1 and in_when:
             when_depth += 1
             current_depth += 1
-            max_depth = max(max_depth, when_depth)
+            max_depth = max(max_depth, when_depth - 1)
 
         elif stripped.startswith("for") or stripped.startswith("while"):
             current_depth += 1
             max_depth = max(max_depth, current_depth)
 
-        elif stripped.startswith('break') and not in_when:
-            current_depth -= 1
-
-        elif stripped.startswith("}"):
+        elif stripped.startswith("}") and stripped.find("else") == -1:
             if current_depth > 0:
                 current_depth -= 1
-            if else_count > 0:
-                current_depth -= 2
-                else_count -= 1
+
+            if in_elif:
+                current_depth -= 1
+                in_elif = False
 
             if in_when:
                 in_when = False
-                current_depth -= when_depth
+                current_depth -= when_depth - 1
                 when_depth = -1
 
     return max_depth - 1

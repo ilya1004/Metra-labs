@@ -96,9 +96,6 @@ regex3 = r"\s*(,|->|\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\
 
 def calculate_metrics():
     text_content = text.get("1.0", END)
-
-    print(max_nesting_level(text_content))
-
     res_count_cond_operators = count_occurrences(regex1, text_content)
     res_count_cond_operators.update(count_occurrences(regex2, text_content))
     res_count_all_operators = count_occurrences(regex3, text_content)
@@ -108,7 +105,8 @@ def calculate_metrics():
     output_text += f"Общее количество операторов: {sum(res_count_all_operators.values())}\n"
     output_text += (f"Насыщенность программы условными операторыми (cl): "
                     f"{sum(res_count_cond_operators.values()) / sum(res_count_all_operators.values())}\n")
-
+    output_text += (f'Максимальный уровень вложенности условного оператора: '
+                    f"{max_nesting_level(text_content)}")
     output.config(state='normal')
     output.delete("1.0", END)
     output.insert(END, output_text)
@@ -119,7 +117,7 @@ if __name__ == "__main__":
 
     root1 = Tk()
     root1.title("")
-    root1.geometry("1050x750")
+    root1.geometry("1050x600")
     root1.rowconfigure(index=0, weight=1)
     root1.columnconfigure(index=0, weight=1)
 

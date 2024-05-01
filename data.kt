@@ -1,4 +1,81 @@
-fun main() {
+
+if (x > y) {
+    println("x is greater than y")
+} else {
+    println("x is not greater than y")
+    if (x < y) {
+        println("x is less than y")
+    } else {
+        println("x is equal to y")
+        if (x % 2 == 0) {
+            println("x is even")
+            while (x < -10) {
+                if (x < -15) {
+                    x += 5
+                } else {
+                    x += 1
+                }
+            }
+        } else {
+            println("x is odd")
+            for (i in 6 downTo 0 step 2) {
+                if (i > 2) {
+                    println("i > 2")
+                    if (i == 4) {
+                        println("i = 4")
+                    } else {
+                        println("i != 4")
+                    }
+                } else {
+                    println("i < 2")
+                }
+            }
+        }
+    }
+}
+println(x)
+
+
+val z = 3
+val result = when (z) {
+    1 -> "One"
+    2 -> "Two"
+    3 -> "Three"
+    4 -> "Four"
+    5 -> "Five"
+    else -> "Other number"
+}
+println("Result: $result")
+
+
+
+for (j in songs.indices) {
+            if (i and (1 shl j) == 0) {
+                continue
+            }
+            if (d[i][j]) {
+                continue
+            }
+
+            for (k in songs.indices) {
+                if (k == j) {
+                    continue
+                }
+                if (i and (1 shl k) == 0) {
+                    continue
+                }
+                if (songs[j].g != songs[k].g && songs[j].w != songs[k].w) {
+                    continue
+                }
+
+                d[i][j] = d[i][j] || d[i xor (1 shl j)][k]
+                if (d[i][j]) {
+                    break
+                }
+            }
+        }
+
+fun main1() {
     val t = readln().toInt()
 
     repeat(t) {
@@ -36,18 +113,32 @@ private fun solve(songs: List<Song>): Int {
     }
 
     for (i in 1..<maxN) {
-        if (i.countOneBits() == 1) continue
+        if (i.countOneBits() == 1) {
+            continue
+        }
         for (j in songs.indices) {
-            if (i and (1 shl j) == 0) continue
-            if (d[i][j]) continue
+            if (i and (1 shl j) == 0) {
+                continue
+            }
+            if (d[i][j]) {
+                continue
+            }
 
             for (k in songs.indices) {
-                if (k == j) continue
-                if (i and (1 shl k) == 0) continue
-                if (songs[j].g != songs[k].g && songs[j].w != songs[k].w) continue
+                if (k == j) {
+                    continue
+                }
+                if (i and (1 shl k) == 0) {
+                    continue
+                }
+                if (songs[j].g != songs[k].g && songs[j].w != songs[k].w) {
+                    continue
+                }
 
                 d[i][j] = d[i][j] || d[i xor (1 shl j)][k]
-                if (d[i][j]) break
+                if (d[i][j]) {
+                    break
+                }
             }
         }
     }
@@ -58,7 +149,9 @@ private fun solve(songs: List<Song>): Int {
 
     var result = songs.size
     for (i in d.indices) {
-        if (d[i].all { !it }) continue
+        if (d[i].all { !it }) {
+            continue
+        }
         result = min(result, songs.size - i.countOneBits())
     }
     return result
@@ -83,8 +176,9 @@ fun bar() {
         var ha = false
         var dot = false
         for (i in 1..n) {
-            if (i % 2 == 1)
+            if (i % 2 == 1) {
                 ha = !ha
+            }
             var ch: Char = ' '
             if (ha) {
                 ch = '#'
@@ -123,7 +217,7 @@ fun main() {
 
         if (x < y) {
             println("x is less than y")
-        } else {
+        } else if (x == y) {
             println("x is equal to y")
 
             if (x % 2 == 0) {
@@ -144,15 +238,4 @@ fun main() {
             }
         }
     }
-
-    val z = 3
-    val result = when (z) {
-        1 -> "One"
-        2 -> "Two"
-        3 -> "Three"
-        4 -> "Four"
-        5 -> "Five"
-        else -> "Other number"
-    }
-    println("Result: $result")
 }

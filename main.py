@@ -25,9 +25,11 @@ def open_file():
 
 
 def count_occurrences(reg, txt):
-    matches = re.findall(reg, txt)  # Находим все вхождения по регулярному выражению
-    occurrence_count = {}  # Словарь для подсчета количества вхождений
+    matches = re.findall(reg, txt)
+    occurrence_count = {}
     if reg == r"(\bwhen\b.+{(.|\n|\t|\r)*})":
+        if "\n" in matches:
+            matches.remove("\n")
         if " " in matches:
             matches.remove(" ")
 
@@ -40,72 +42,116 @@ def count_occurrences(reg, txt):
     return occurrence_count
 
 
+def max_nesting_level(code):
+    max_depth = 0
+    current_depth = 0
+    when_depth = -1
+    in_when = False
+    else_count = 0
+    for line in code.split('\n'):
+        stripped = line.strip()
+        if (stripped.startswith('if') or stripped.find('else if') != -1 or
+                (stripped.find('else') != -1 and in_when is False) or stripped.startswith("do")):
+            if stripped.find('else if') != -1 or (stripped.find('else') != -1 and in_when is False):
+                else_count += 1
+            current_depth += 1
+            max_depth = max(max_depth, current_depth)
+
+        elif stripped.find("when") != -1:
+            in_when = True
+
+        elif stripped.find("->") != -1 and in_when:
+            when_depth += 1
+            current_depth += 1
+            max_depth = max(max_depth, when_depth)
+
+        elif stripped.startswith("for") or stripped.startswith("while"):
+            current_depth += 1
+            max_depth = max(max_depth, current_depth)
+
+        elif stripped.startswith('break') and not in_when:
+            current_depth -= 1
+
+        elif stripped.startswith("}"):
+            if current_depth > 0:
+                current_depth -= 1
+            if else_count > 0:
+                current_depth -= 2
+                else_count -= 1
+
+            if in_when:
+                in_when = False
+                current_depth -= when_depth
+                when_depth = -1
+
+    return max_depth - 1
+
+
 regex1 = r"\b(else\s+if|if(?=.+else)*|for|while)\b"  # условные операторы
 regex2 = r"(\bwhen\b.+{(.|\n|\t|\r)*})"  # оператор when
+regex3 = r"\s*(,|->|\+|-|\*|\/|%|==|!=|>|<|>=|<=|=|\+=|-=|\*=|\/=|%=|&&|\|\||!|\+\+|--|\.\.|\.|\(.+\)|else\s+if|if|for|when|while|return|throw|!=|do|\[.+\])(?=\s*)"  # все операторы
 
 
 def calculate_metrics():
-    global res_count_cond_operators, result2
     text_content = text.get("1.0", END)
+
+    print(max_nesting_level(text_content))
+
     res_count_cond_operators = count_occurrences(regex1, text_content)
-    res_count_cond_operators += count_occurrences(regex2, text_content)
+    res_count_cond_operators.update(count_occurrences(regex2, text_content))
+    res_count_all_operators = count_occurrences(regex3, text_content)
+
+    output_text = f"Метрика Джилба.\n"
+    output_text += f"Количество условных операторов (CL): {sum(res_count_cond_operators.values())}\n"
+    output_text += f"Общее количество операторов: {sum(res_count_all_operators.values())}\n"
+    output_text += (f"Насыщенность программы условными операторыми (cl): "
+                    f"{sum(res_count_cond_operators.values()) / sum(res_count_all_operators.values())}\n")
+
+    output.config(state='normal')
+    output.delete("1.0", END)
+    output.insert(END, output_text)
+    output.config(state='disabled')
 
 
+if __name__ == "__main__":
 
+    root1 = Tk()
+    root1.title("")
+    root1.geometry("1050x750")
+    root1.rowconfigure(index=0, weight=1)
+    root1.columnconfigure(index=0, weight=1)
 
+    frame = Frame(root1)
+    frame.pack(pady=10)
 
+    select_button = Button(frame, text="Выбрать файл", command=open_file)
+    select_button.pack(side=LEFT)
 
-    # n = len(result1) + len(result2)
-    # output_text = f"Словарь программы. n = {len(result1)} + {len(result2)} = {n}\n"
-    # N = sum(result1.values()) + sum(result2.values())
-    # output_text += f"Длина программы. N = {sum(result1.values())} + {sum(result2.values())} = {N}\n"
-    # V = N * math.log(n, 2)
-    # output_text += f"Объем программы. V = {N}*log2({n}) = {int(V)}"
-    # result1["Итого"] = sum(result1.values())
-    # result2["Итого"] = sum(result2.values())
-    # output.config(state='normal')
-    # output.delete("1.0", END)
-    # output.insert(END, output_text)
-    # output.config(state='disabled')
+    calculate_button = Button(frame, text="Рассчитать", command=calculate_metrics)
+    calculate_button.pack(side=LEFT)
 
+    text_frame = Frame(root1)
+    text_frame.pack(fill=BOTH, expand=True)
 
+    scrollbar = Scrollbar(text_frame)
+    scrollbar.pack(side=RIGHT, fill=Y)
 
-root1 = Tk()
-root1.title("")
-root1.geometry("1050x750")
-root1.rowconfigure(index=0, weight=1)
-root1.columnconfigure(index=0, weight=1)
+    text = Text(text_frame, height=15, yscrollcommand=scrollbar.set)
+    text.pack(fill=BOTH, expand=True)
 
-frame = Frame(root1)
-frame.pack(pady=10)
+    scrollbar.config(command=text.yview)
 
-select_button = Button(frame, text="Выбрать файл", command=open_file)
-select_button.pack(side=LEFT)
+    output_frame = Frame(root1)
+    output_frame.pack(fill=BOTH, expand=True)
 
-calculate_button = Button(frame, text="Рассчитать", command=calculate_metrics)
-calculate_button.pack(side=LEFT)
+    output_label = Label(output_frame, text="Результат:")
+    output_label.pack()
 
-text_frame = Frame(root1)
-text_frame.pack(fill=BOTH, expand=True)
+    output = Text(output_frame, height=1)
+    output.pack(fill=BOTH, expand=True)
+    output.config(state='disabled')
 
-scrollbar = Scrollbar(text_frame)
-scrollbar.pack(side=RIGHT, fill=Y)
+    tree_frame = Frame(root1)
+    tree_frame.pack(fill=BOTH, expand=True)
 
-text = Text(text_frame, height=15, yscrollcommand=scrollbar.set)
-text.pack(fill=BOTH, expand=True)
-
-scrollbar.config(command=text.yview)
-
-output_frame = Frame(root1)
-output_frame.pack(fill=BOTH, expand=True)
-
-output_label = Label(output_frame, text="Результат:")
-output_label.pack()
-
-output = Text(output_frame, height=1)
-output.pack(fill=BOTH, expand=True)
-output.config(state='disabled')
-
-
-tree_frame = Frame(root1)
-tree_frame.pack(fill=BOTH, expand=True)
+    root1.mainloop()
